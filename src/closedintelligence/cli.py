@@ -15,6 +15,7 @@ from .webapp import serve
 
 
 DEFAULT_STATE = ".closedintelligence/company-field.json"
+SENSITIVE_KEY_FRAGMENTS = ("signature", "mesh_key", "secret", "private", "password", "token")
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -153,8 +154,26 @@ def save_field(args: argparse.Namespace, field: CompanyField) -> None:
     field.save(args.state)
 
 
-def print_json(value: object, *, pretty: bool = True) -> None:
-    print(json.dumps(value, indent=2 if pretty else None, sort_keys=True))
+def terminal_safe(value: Any) -> Any:
+    if isinstance(value, dict):
+        safe: dict[str, Any] = {}
+        for key, item in value.items():
+            key_text = str(key)
+            if any(fragment in key_text.lower() for fragment in SENSITIVE_KEY_FRAGMENTS):
+                safe[key_text] = "<redacted>"
+            else:
+                safe[key_text] = terminal_safe(item)
+        return safe
+    if isinstance(value, list):
+        return [terminal_safe(item) for item in value]
+    if isinstance(value, tuple):
+        return [terminal_safe(item) for item in value]
+    return value
+
+
+def print_json(value: Any, *, pretty: bool = True) -> None:
+    safe_value = terminal_safe(value)
+    print(json.dumps(safe_value, indent=2 if pretty else None, sort_keys=True))
 
 
 def event_receipt(event: SignedEvent) -> dict[str, Any]:
