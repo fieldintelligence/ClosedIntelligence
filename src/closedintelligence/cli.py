@@ -171,10 +171,9 @@ def terminal_safe(value: Any) -> Any:
     return value
 
 
-def print_json(value: Any, *, pretty: bool = True) -> None:
+def json_text(value: Any, *, pretty: bool = True) -> str:
     safe_value = terminal_safe(value)
-    sys.stdout.write(json.dumps(safe_value, indent=2 if pretty else None, sort_keys=True))
-    sys.stdout.write("\n")
+    return json.dumps(safe_value, indent=2 if pretty else None, sort_keys=True)
 
 
 def event_receipt(event: SignedEvent) -> dict[str, Any]:
@@ -192,7 +191,7 @@ def run_dapp(args: argparse.Namespace) -> int:
     if args.dapp_cmd == "init":
         field = load_field(args)
         save_field(args, field)
-        print_json({"state": args.state, "company": field.company, "head": field.head})
+        sys.stdout.write(json_text({"state": args.state, "company": field.company, "head": field.head}) + "\n")
         return 0
 
     if args.dapp_cmd == "serve":
@@ -208,52 +207,52 @@ def run_dapp(args: argparse.Namespace) -> int:
 
     field = load_field(args)
     if args.dapp_cmd == "state":
-        print_json(field.snapshot().to_dict())
+        sys.stdout.write(json_text(field.snapshot().to_dict()) + "\n")
         return 0
     if args.dapp_cmd == "join":
         employee = EmployeeIdentity.create(args.handle, args.display_name, args.department)
         event = field.join_employee(employee)
         save_field(args, field)
-        print_json({"employee": employee.to_dict(), "event": event_receipt(event)})
+        sys.stdout.write(json_text({"employee": employee.to_dict(), "event": event_receipt(event)}) + "\n")
         return 0
     if args.dapp_cmd == "post":
         event = field.post_knowledge(args.author, args.title, args.body, args.tag)
         save_field(args, field)
-        print_json(event_receipt(event))
+        sys.stdout.write(json_text(event_receipt(event)) + "\n")
         return 0
     if args.dapp_cmd == "proposal":
         event = field.open_proposal(args.author, args.title, args.body, args.option or ["yes", "no"])
         save_field(args, field)
-        print_json(event_receipt(event))
+        sys.stdout.write(json_text(event_receipt(event)) + "\n")
         return 0
     if args.dapp_cmd == "vote":
         event = field.vote(args.author, args.proposal_id, args.option, args.reason)
         save_field(args, field)
-        print_json(event_receipt(event))
+        sys.stdout.write(json_text(event_receipt(event)) + "\n")
         return 0
     if args.dapp_cmd == "task":
         event = field.assign_task(args.author, args.assignee, args.title, args.body, args.due)
         save_field(args, field)
-        print_json(event_receipt(event))
+        sys.stdout.write(json_text(event_receipt(event)) + "\n")
         return 0
     if args.dapp_cmd == "decision":
         event = field.record_decision(args.author, args.title, args.body, args.proposal_id)
         save_field(args, field)
-        print_json(event_receipt(event))
+        sys.stdout.write(json_text(event_receipt(event)) + "\n")
         return 0
     if args.dapp_cmd == "export":
         save_bundle(args.out, field.export_bundle())
-        print_json({"out": str(bundle_path(args.out)), "events": len(field.events), "head": field.head})
+        sys.stdout.write(json_text({"out": str(bundle_path(args.out)), "events": len(field.events), "head": field.head}) + "\n")
         return 0
     if args.dapp_cmd == "import":
         report = field.merge_bundle(load_bundle(args.bundle))
         save_field(args, field)
-        print_json(report.to_dict())
+        sys.stdout.write(json_text(report.to_dict()) + "\n")
         return 0
     if args.dapp_cmd == "answer":
         lens = Lens.from_mapping(field.to_lens_records(), source=str(Path(args.state)))
         packet = answer(args.question, lens)
-        print_json(packet.to_dict(), pretty=args.pretty)
+        sys.stdout.write(json_text(packet.to_dict(), pretty=args.pretty) + "\n")
         return 0
 
     raise ValueError(f"unknown dapp command: {args.dapp_cmd}")
