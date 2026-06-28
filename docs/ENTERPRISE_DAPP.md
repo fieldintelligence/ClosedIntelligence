@@ -83,7 +83,7 @@ On employee B:
 closedai dapp import acme-bundle.json
 ```
 
-The merge path verifies event signatures and rejects tampered events.
+The CLI stores bundles under `.closedintelligence/bundles/` and only accepts bundle filenames. The merge path verifies event signatures and rejects tampered events.
 
 ## Lens Answers
 

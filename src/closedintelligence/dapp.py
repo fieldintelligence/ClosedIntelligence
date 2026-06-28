@@ -13,10 +13,13 @@ from dataclasses import dataclass, field
 import hashlib
 import hmac
 import json
+import os
 from pathlib import Path
 import secrets
 import time
 from typing import Any, Iterable, Literal, Mapping
+
+DEFAULT_BUNDLE_DIR = ".closedintelligence/bundles"
 
 EventKind = Literal[
     "employee.joined",
@@ -40,6 +43,26 @@ def stable_json(value: Mapping[str, Any]) -> str:
 def sha256_hex(value: str | bytes) -> str:
     data = value.encode("utf-8") if isinstance(value, str) else value
     return hashlib.sha256(data).hexdigest()
+
+
+def bundle_path(name: str | Path, *, base_dir: str | Path = DEFAULT_BUNDLE_DIR) -> Path:
+    """Resolve an operator bundle filename inside the configured bundle root."""
+
+    text = str(name)
+    safe_name = os.path.basename(text)
+    candidate = Path(text)
+    if not text or "\x00" in text:
+        raise ValueError("bundle filename is required")
+    if safe_name != text or candidate.is_absolute() or safe_name in {".", ".."}:
+        raise ValueError("bundle must be a filename, not a path")
+    if candidate.suffix.lower() != ".json":
+        raise ValueError("bundle filename must end in .json")
+
+    root = Path(base_dir).expanduser().resolve(strict=False)
+    resolved = (root / safe_name).resolve(strict=False)
+    if resolved.parent != root:
+        raise ValueError("bundle path escapes the configured bundle directory")
+    return resolved
 
 
 @dataclass(frozen=True)
@@ -385,11 +408,11 @@ class CompanyField:
         return hmac.new(self.mesh_key.encode("utf-8"), stable_json(unsigned).encode("utf-8"), hashlib.sha256).hexdigest()
 
 
-def load_bundle(path: str | Path) -> dict[str, Any]:
-    return json.loads(Path(path).read_text(encoding="utf-8"))
+def load_bundle(name: str | Path, *, base_dir: str | Path = DEFAULT_BUNDLE_DIR) -> dict[str, Any]:
+    return json.loads(bundle_path(name, base_dir=base_dir).read_text(encoding="utf-8"))
 
 
-def save_bundle(path: str | Path, bundle: Mapping[str, Any]) -> None:
-    out = Path(path)
+def save_bundle(name: str | Path, bundle: Mapping[str, Any], *, base_dir: str | Path = DEFAULT_BUNDLE_DIR) -> None:
+    out = bundle_path(name, base_dir=base_dir)
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(bundle, indent=2, sort_keys=True), encoding="utf-8")

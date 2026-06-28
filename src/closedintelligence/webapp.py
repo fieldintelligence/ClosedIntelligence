@@ -10,7 +10,7 @@ from typing import Any
 from urllib.parse import urlparse
 
 from .core import Lens, answer
-from .dapp import CompanyField, EmployeeIdentity, load_bundle, save_bundle
+from .dapp import CompanyField, EmployeeIdentity
 
 STATIC_DIR = Path(__file__).with_name("static")
 
@@ -123,16 +123,6 @@ class DappRequestHandler(BaseHTTPRequestHandler):
                 return
             if path == "/api/merge":
                 report = self.server.field.merge_bundle(body)
-                self.server.persist()
-                self._send_json(report.to_dict())
-                return
-            if path == "/api/export":
-                out = str(body["path"])
-                save_bundle(out, self.server.field.export_bundle())
-                self._send_json({"path": out})
-                return
-            if path == "/api/import":
-                report = self.server.field.merge_bundle(load_bundle(str(body["path"])))
                 self.server.persist()
                 self._send_json(report.to_dict())
                 return

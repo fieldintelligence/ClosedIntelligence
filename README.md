@@ -97,7 +97,7 @@ closedai dapp answer "What needs risk review?" --pretty
 closedai dapp export acme-field-bundle.json
 ```
 
-Employees can exchange exported bundles over VPN, shared drives, internal chat, or other approved company channels. Importing a bundle merges signed events into the local field:
+The CLI stores bundle files under `.closedintelligence/bundles/` and accepts a filename, not an arbitrary server path. Employees can exchange exported bundles over VPN, shared drives, internal chat, or other approved company channels. Importing a bundle merges signed events into the local field:
 
 ```sh
 closedai dapp import acme-field-bundle.json

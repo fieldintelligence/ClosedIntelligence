@@ -5,7 +5,7 @@ import unittest
 from urllib import request
 
 from closedintelligence import CompanyField, EmployeeIdentity, Lens, answer
-from closedintelligence.dapp import SignedEvent
+from closedintelligence.dapp import SignedEvent, load_bundle, save_bundle
 from closedintelligence.webapp import serve
 
 
@@ -43,6 +43,17 @@ class DappTests(unittest.TestCase):
 
         self.assertEqual(report.imported, 0)
         self.assertEqual(report.rejected, (event.id,))
+
+    def test_bundle_files_are_confined_to_bundle_directory(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            bundle = {"format": "closedintelligence.bundle.v1", "events": []}
+            save_bundle("field.json", bundle, base_dir=tmp)
+
+            self.assertEqual(load_bundle("field.json", base_dir=tmp), bundle)
+            with self.assertRaises(ValueError):
+                save_bundle("../field.json", bundle, base_dir=tmp)
+            with self.assertRaises(ValueError):
+                load_bundle("/tmp/field.json", base_dir=tmp)
 
     def test_company_field_can_answer_through_lens(self):
         field = CompanyField("Acme", "mesh-key")

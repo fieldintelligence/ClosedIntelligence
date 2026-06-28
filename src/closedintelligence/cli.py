@@ -7,9 +7,10 @@ import json
 import os
 from pathlib import Path
 import sys
+from typing import Any
 
 from .core import Lens, answer
-from .dapp import CompanyField, EmployeeIdentity, load_bundle, save_bundle
+from .dapp import CompanyField, EmployeeIdentity, SignedEvent, bundle_path, load_bundle, save_bundle
 from .webapp import serve
 
 
@@ -156,6 +157,17 @@ def print_json(value: object, *, pretty: bool = True) -> None:
     print(json.dumps(value, indent=2 if pretty else None, sort_keys=True))
 
 
+def event_receipt(event: SignedEvent) -> dict[str, Any]:
+    return {
+        "id": event.id,
+        "kind": event.kind,
+        "author": event.author,
+        "timestamp_ms": event.timestamp_ms,
+        "prev": event.prev,
+        "payload": dict(event.payload),
+    }
+
+
 def run_dapp(args: argparse.Namespace) -> int:
     if args.dapp_cmd == "init":
         field = load_field(args)
@@ -182,36 +194,36 @@ def run_dapp(args: argparse.Namespace) -> int:
         employee = EmployeeIdentity.create(args.handle, args.display_name, args.department)
         event = field.join_employee(employee)
         save_field(args, field)
-        print_json({"employee": employee.to_dict(), "event": event.to_dict()})
+        print_json({"employee": employee.to_dict(), "event": event_receipt(event)})
         return 0
     if args.dapp_cmd == "post":
         event = field.post_knowledge(args.author, args.title, args.body, args.tag)
         save_field(args, field)
-        print_json(event.to_dict())
+        print_json(event_receipt(event))
         return 0
     if args.dapp_cmd == "proposal":
         event = field.open_proposal(args.author, args.title, args.body, args.option or ["yes", "no"])
         save_field(args, field)
-        print_json(event.to_dict())
+        print_json(event_receipt(event))
         return 0
     if args.dapp_cmd == "vote":
         event = field.vote(args.author, args.proposal_id, args.option, args.reason)
         save_field(args, field)
-        print_json(event.to_dict())
+        print_json(event_receipt(event))
         return 0
     if args.dapp_cmd == "task":
         event = field.assign_task(args.author, args.assignee, args.title, args.body, args.due)
         save_field(args, field)
-        print_json(event.to_dict())
+        print_json(event_receipt(event))
         return 0
     if args.dapp_cmd == "decision":
         event = field.record_decision(args.author, args.title, args.body, args.proposal_id)
         save_field(args, field)
-        print_json(event.to_dict())
+        print_json(event_receipt(event))
         return 0
     if args.dapp_cmd == "export":
         save_bundle(args.out, field.export_bundle())
-        print_json({"out": args.out, "events": len(field.events), "head": field.head})
+        print_json({"out": str(bundle_path(args.out)), "events": len(field.events), "head": field.head})
         return 0
     if args.dapp_cmd == "import":
         report = field.merge_bundle(load_bundle(args.bundle))
