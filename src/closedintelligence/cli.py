@@ -10,7 +10,7 @@ import sys
 from typing import Any
 
 from .core import Lens, answer
-from .dapp import CompanyField, EmployeeIdentity, SignedEvent, bundle_path, load_bundle, save_bundle
+from .dapp import CompanyField, EmployeeIdentity, FieldSnapshot, SignedEvent, bundle_path, load_bundle, save_bundle
 from .webapp import serve
 
 
@@ -187,6 +187,19 @@ def event_receipt(event: SignedEvent) -> dict[str, Any]:
     }
 
 
+def state_summary(snapshot: FieldSnapshot) -> dict[str, Any]:
+    return {
+        "company": snapshot.company,
+        "event_count": snapshot.event_count,
+        "employee_count": len(snapshot.employees),
+        "knowledge_count": len(snapshot.knowledge),
+        "proposal_count": len(snapshot.proposals),
+        "task_count": len(snapshot.tasks),
+        "decision_count": len(snapshot.decisions),
+        "trusted_peer_count": len(snapshot.trusted_peers),
+    }
+
+
 def run_dapp(args: argparse.Namespace) -> int:
     if args.dapp_cmd == "init":
         field = load_field(args)
@@ -207,7 +220,7 @@ def run_dapp(args: argparse.Namespace) -> int:
 
     field = load_field(args)
     if args.dapp_cmd == "state":
-        sys.stdout.write(json_text(field.snapshot().to_dict()) + "\n")
+        sys.stdout.write(json_text(state_summary(field.snapshot())) + "\n")
         return 0
     if args.dapp_cmd == "join":
         employee = EmployeeIdentity.create(args.handle, args.display_name, args.department)

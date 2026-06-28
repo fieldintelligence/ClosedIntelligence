@@ -91,7 +91,7 @@ CLI example:
 
 ```sh
 closedai dapp join alice "Alice Ops" --department ops
-closedai dapp state
+closedai dapp state   # prints a non-sensitive count summary
 closedai dapp post <alice-public-id> "Customer handoff" "Customer Alpha needs a risk review." --tag customer --tag risk
 closedai dapp answer "What needs risk review?" --pretty
 closedai dapp export acme-field-bundle.json
