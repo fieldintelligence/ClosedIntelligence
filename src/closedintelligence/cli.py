@@ -173,7 +173,8 @@ def terminal_safe(value: Any) -> Any:
 
 def print_json(value: Any, *, pretty: bool = True) -> None:
     safe_value = terminal_safe(value)
-    print(json.dumps(safe_value, indent=2 if pretty else None, sort_keys=True))
+    sys.stdout.write(json.dumps(safe_value, indent=2 if pretty else None, sort_keys=True))
+    sys.stdout.write("\n")
 
 
 def event_receipt(event: SignedEvent) -> dict[str, Any]:
