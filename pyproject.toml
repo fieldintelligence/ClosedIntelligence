@@ -1,0 +1,38 @@
+[build-system]
+requires = ["hatchling>=1.26"]
+build-backend = "hatchling.build"
+
+[project]
+name = "closedintelligence"
+version = "0.1.0"
+description = "Logic-only multi-agent LLM package over open Knitweb-style webs, fields, and lenses."
+readme = "README.md"
+requires-python = ">=3.11"
+license = "Apache-2.0"
+authors = [
+  { name = "FieldIntelligence" }
+]
+keywords = [
+  "llm",
+  "multi-agent",
+  "p2p",
+  "knitweb",
+  "lens",
+  "open-source",
+  "chat"
+]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "License :: OSI Approved :: Apache Software License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence"
+]
+
+[project.urls]
+Homepage = "https://github.com/fieldintelligence/ClosedIntelligence"
+Repository = "https://github.com/fieldintelligence/ClosedIntelligence"
+
+[project.scripts]
+closedintelligence = "closedintelligence.cli:main"
+closedai = "closedintelligence.cli:main"

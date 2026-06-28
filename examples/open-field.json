@@ -1,0 +1,28 @@
+{
+  "records": [
+    {
+      "id": "field:closedintelligence:purpose",
+      "title": "ClosedIntelligence purpose",
+      "body": "ClosedIntelligence is a logic-only multi-agent LLM package that combines ClaudeClaw-style roles with open Knitweb webs, FieldIntelligence fields, and Lens retrieval.",
+      "tags": ["closedintelligence", "llm", "multi-agent", "lens"]
+    },
+    {
+      "id": "field:knitweb:lens",
+      "title": "Knitweb Lens",
+      "body": "A Lens reads open web snapshots and returns deterministic candidate records with provenance-friendly identifiers.",
+      "tags": ["knitweb", "lens", "web"]
+    },
+    {
+      "id": "field:claudeclaw:agents",
+      "title": "ClaudeClaw agents",
+      "body": "ClaudeClaw decomposes a question across scout, weaver, skeptic, steward, and speaker roles before emitting an answer packet.",
+      "tags": ["claudeclaw", "agent", "reasoning"]
+    },
+    {
+      "id": "field:competition:chat",
+      "title": "Chat product competition",
+      "body": "ClosedIntelligence competes with centralized chat products at the orchestration layer by making roles, memory, retrieval, and evidence inspectable.",
+      "tags": ["chatgpt", "claude", "kimi", "perplexity", "open-source"]
+    }
+  ]
+}
