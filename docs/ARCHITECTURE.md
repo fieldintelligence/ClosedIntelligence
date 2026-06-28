@@ -38,3 +38,33 @@ This is intentionally logic-only. Hosted or local LLM adapters can be added late
 ClosedIntelligence may read open fields and local fields. It must not publish private field state unless an explicit adapter and human policy allow it.
 
 The default CLI only reads JSON snapshots and writes answer packets to stdout.
+
+## Enterprise DApp Layer
+
+The dapp layer adds an internal company field:
+
+```text
+employee action
+  -> SignedEvent
+  -> CompanyField event DAG
+  -> P2P bundle
+  -> peer merge
+  -> Lens records
+  -> ClaudeClaw answer
+```
+
+This layer deliberately starts as local-first P2P bundle exchange rather than a mandatory always-on server. Companies can run it over VPN, shared drives, internal chat, or a future peer transport adapter.
+
+## Signed Events
+
+`CompanyField` stores signed events for:
+
+- employee joins,
+- knowledge posts,
+- proposals,
+- votes,
+- tasks,
+- decisions,
+- trusted peers.
+
+The default signer uses an HMAC mesh key so the MVP works with Python's standard library. The event shape is designed so an Ed25519 signer can replace HMAC in production without changing the dapp API.

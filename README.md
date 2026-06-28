@@ -1,6 +1,6 @@
 # ClosedIntelligence
 
-ClosedIntelligence is an open-source, logic-only LLM package for field-native chat.
+ClosedIntelligence is an open-source, logic-only LLM package and enterprise dapp for field-native chat.
 
 It is built to compete with centralized chat products such as ChatGPT, Claude Chat, Kimi Chat, Z.ai Chat, and Perplexity at the orchestration layer, not by shipping a heavy model. It combines:
 
@@ -9,6 +9,7 @@ It is built to compete with centralized chat products such as ChatGPT, Claude Ch
 - FieldIntelligence field snapshots,
 - Lens retrieval over trusted local/open data,
 - deterministic answer packets that can be inspected, replayed, and audited.
+- internal employee P2P bundles for company knowledge, proposals, tasks, and decisions.
 
 ## Core Idea
 
@@ -58,6 +59,52 @@ Output is an answer packet with:
 - confidence,
 - cited record IDs.
 
+## Enterprise DApp
+
+ClosedIntelligence also ships a local-first business dapp for internal P2P use between employees.
+
+It supports:
+
+- employee identities,
+- signed knowledge posts,
+- proposals and votes,
+- task assignments,
+- decision records,
+- internal P2P bundle export/import,
+- Lens answers over the live company field,
+- browser dashboard without Node, npm, or external Python web dependencies.
+
+Run it locally:
+
+```sh
+closedai dapp init --company "Acme"
+closedai dapp serve --port 8787
+```
+
+Then open:
+
+```text
+http://127.0.0.1:8787/
+```
+
+CLI example:
+
+```sh
+closedai dapp join alice "Alice Ops" --department ops
+closedai dapp state
+closedai dapp post <alice-public-id> "Customer handoff" "Customer Alpha needs a risk review." --tag customer --tag risk
+closedai dapp answer "What needs risk review?" --pretty
+closedai dapp export acme-field-bundle.json
+```
+
+Employees can exchange exported bundles over VPN, shared drives, internal chat, or other approved company channels. Importing a bundle merges signed events into the local field:
+
+```sh
+closedai dapp import acme-field-bundle.json
+```
+
+The default dapp stores state in `.closedintelligence/company-field.json`, which is gitignored because it contains local mesh material.
+
 ## Repository Contract
 
 ClosedIntelligence is open source. It may consume public/open fields from Knitweb, OpenChem, ChemField, and other field repositories.
@@ -72,6 +119,17 @@ Field Snapshot
   -> CandidateSet
   -> ClaudeClaw agents
   -> AnswerPacket
+```
+
+DApp flow:
+
+```text
+Employee event
+  -> signed company field log
+  -> optional P2P bundle
+  -> peer merge
+  -> Lens
+  -> ClaudeClaw answer packet
 ```
 
 Agents in the default ClaudeClaw loop:
@@ -117,7 +175,7 @@ or a Knitweb-style mapping:
 
 ```sh
 python3 -m pip install -e .
-python3 -m pytest
+PYTHONPATH=src python3 -m unittest discover -s tests
 ```
 
 ## License

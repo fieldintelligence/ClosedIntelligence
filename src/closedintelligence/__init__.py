@@ -8,13 +8,19 @@ from .core import (
     Lens,
     answer,
 )
+from .dapp import CompanyField, EmployeeIdentity, FieldSnapshot, MergeReport, SignedEvent
 
 __all__ = [
     "AgentNote",
     "AnswerPacket",
     "ClaudeClaw",
+    "CompanyField",
+    "EmployeeIdentity",
+    "FieldSnapshot",
     "FieldRecord",
     "Lens",
+    "MergeReport",
+    "SignedEvent",
     "answer",
 ]
 

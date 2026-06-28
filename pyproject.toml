@@ -36,3 +36,4 @@ Repository = "https://github.com/fieldintelligence/ClosedIntelligence"
 [project.scripts]
 closedintelligence = "closedintelligence.cli:main"
 closedai = "closedintelligence.cli:main"
+fieldintelligence = "closedintelligence.cli:main"

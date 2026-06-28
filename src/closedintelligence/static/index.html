@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ClosedIntelligence Field DApp</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <aside class="rail">
+    <div class="mark">FI</div>
+    <nav>
+      <a href="#field">Field</a>
+      <a href="#compose">Compose</a>
+      <a href="#proposals">Proposals</a>
+      <a href="#lens">Lens</a>
+      <a href="#sync">Sync</a>
+    </nav>
+  </aside>
+
+  <main>
+    <section class="hero" id="field">
+      <div>
+        <p class="kicker">FieldIntelligence DApp</p>
+        <h1>Internal P2P intelligence between employees.</h1>
+        <p class="lead">ClosedIntelligence gives a company a local-first field where workers post knowledge, vote on proposals, assign tasks, record decisions and sync signed bundles over internal channels.</p>
+      </div>
+      <div class="metric-grid">
+        <div class="metric"><span id="employeeCount">0</span><small>employees</small></div>
+        <div class="metric"><span id="knowledgeCount">0</span><small>field records</small></div>
+        <div class="metric"><span id="proposalCount">0</span><small>proposals</small></div>
+        <div class="metric"><span id="eventCount">0</span><small>events</small></div>
+      </div>
+    </section>
+
+    <section class="band" id="compose">
+      <div class="panel">
+        <h2>Employee</h2>
+        <form id="employeeForm">
+          <input name="handle" placeholder="handle" required />
+          <input name="display_name" placeholder="display name" required />
+          <input name="department" placeholder="department" />
+          <button>Join field</button>
+        </form>
+      </div>
+      <div class="panel">
+        <h2>Knowledge</h2>
+        <form id="knowledgeForm">
+          <input name="author" placeholder="author public id" required />
+          <input name="title" placeholder="title" required />
+          <textarea name="body" placeholder="field note, customer insight, incident context" required></textarea>
+          <input name="tags" placeholder="tags, comma separated" />
+          <button>Post record</button>
+        </form>
+      </div>
+    </section>
+
+    <section class="band" id="proposals">
+      <div class="panel">
+        <h2>Proposal</h2>
+        <form id="proposalForm">
+          <input name="author" placeholder="author public id" required />
+          <input name="title" placeholder="proposal title" required />
+          <textarea name="body" placeholder="business decision or operational change" required></textarea>
+          <input name="options" placeholder="options, comma separated" value="yes,no" />
+          <button>Open proposal</button>
+        </form>
+      </div>
+      <div class="panel">
+        <h2>Vote</h2>
+        <form id="voteForm">
+          <input name="author" placeholder="author public id" required />
+          <input name="proposal_id" placeholder="proposal id" required />
+          <input name="option" placeholder="option" required />
+          <input name="reason" placeholder="reason" />
+          <button>Vote</button>
+        </form>
+      </div>
+    </section>
+
+    <section class="band">
+      <div class="panel">
+        <h2>Task</h2>
+        <form id="taskForm">
+          <input name="author" placeholder="author public id" required />
+          <input name="assignee" placeholder="assignee public id" required />
+          <input name="title" placeholder="task title" required />
+          <textarea name="body" placeholder="task details" required></textarea>
+          <input name="due" placeholder="due date or SLA" />
+          <button>Assign task</button>
+        </form>
+      </div>
+      <div class="panel">
+        <h2>Decision</h2>
+        <form id="decisionForm">
+          <input name="author" placeholder="author public id" required />
+          <input name="title" placeholder="decision title" required />
+          <textarea name="body" placeholder="decision and rationale" required></textarea>
+          <input name="proposal_id" placeholder="proposal id" />
+          <button>Record decision</button>
+        </form>
+      </div>
+    </section>
+
+    <section class="band" id="lens">
+      <div class="panel wide">
+        <h2>Lens answer</h2>
+        <form id="answerForm">
+          <textarea name="question" placeholder="Ask over the internal field" required></textarea>
+          <button>Ask field</button>
+        </form>
+        <pre id="answerOutput"></pre>
+      </div>
+    </section>
+
+    <section class="band" id="sync">
+      <div class="panel">
+        <h2>P2P bundle</h2>
+        <button id="downloadBundle" type="button">Download bundle</button>
+        <p class="hint">Use bundles over VPN, shared drive or internal chat to sync opted-in employees without a central model service.</p>
+      </div>
+      <div class="panel">
+        <h2>State</h2>
+        <pre id="stateOutput"></pre>
+      </div>
+    </section>
+  </main>
+
+  <script src="/app.js"></script>
+</body>
+</html>
