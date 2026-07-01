@@ -37,3 +37,7 @@ Repository = "https://github.com/fieldintelligence/ClosedIntelligence"
 closedintelligence = "closedintelligence.cli:main"
 closedai = "closedintelligence.cli:main"
 fieldintelligence = "closedintelligence.cli:main"
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
